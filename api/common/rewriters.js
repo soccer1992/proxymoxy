@@ -90,6 +90,13 @@ export function wrapJS(js, fromOrigin) {
             try{
                 __node__.source.value = proxyWrapUrl(__node__.source.value, fromOrigin.href)
             }catch(e){}
+        },
+        Identifier: (__node__) => {
+            switch (__node__.name){
+                case "location":
+                    __node__.name = `$${__VARMAINNAME__}$${__node__.name}`
+                    break;
+            }
         }
     });
 
