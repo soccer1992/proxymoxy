@@ -88,7 +88,7 @@ export function wrapJS(js, fromOrigin) {
         OptionalMemberExpression: rewriteMember,
         ImportDeclaration: (__node__) => {
             try{
-                __node__.source.value = proxyWrapUrl(__node__.source.value, fromOrigin)
+                __node__.source.value = proxyWrapUrl(__node__.source.value, fromOrigin.href)
             }catch(e){}
         }
     });

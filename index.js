@@ -1,5 +1,4 @@
 import path from 'node:path';
-import * as cheerio from 'cheerio';
 import express from 'express';
 import * as fs from "node:fs";
 const app = express();
@@ -29,7 +28,6 @@ const renameVars = [
     "fromOrigin",
     "attrName",
     "visitor",
-    "parent",
     "__node__"
 ]
 function randomName(length){
@@ -53,7 +51,7 @@ app.get('/', (req, res) => {
     return res.send("<a href='/pub/index.html'>Here</a>")
 })
 
-app.get('/*targetUrl', async (req, res) => {
+app.all('/*targetUrl', async (req, res) => {
     const rawIp = req.ip || '';
     if (rawIp === '') {
         res.status(403).end();
@@ -128,9 +126,13 @@ app.get('/*targetUrl', async (req, res) => {
         let formatUrl = new URL(decodeURIComponent(targetUrl));
         let headers = req.headers;
         headers["host"] = formatUrl.host;
+        const isGetOrHead = ['GET', 'HEAD'].includes(req.method.toUpperCase());
         const response = await fetch(formatUrl.href, {
             headers: req.headers,
             redirect: 'manual',
+            body: isGetOrHead ? undefined : req,
+            ...(isGetOrHead ? {} : { duplex: 'half' }),
+            method: req.method
         });
         res.status(response.status);
         response.headers.forEach((value, name) => {

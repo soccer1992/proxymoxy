@@ -13,7 +13,8 @@ export let supportedElements = {
     "track": "src",
     "embed": "src",
     "input": "src",
-    "meta": "/"
+    "meta": "/",
+    "form": "action"
 }
 
 export function proxyWrapUrl(url, fromOrigin){

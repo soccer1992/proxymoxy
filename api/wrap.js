@@ -11,10 +11,10 @@ function dynamicWrap(contentType, resp, reqURL){
 
         // TODO: Hook up your Cheerio (HTML) or Babel (JS) parsing here!
         if (contentType.startsWith("text/html")){
-            return htmlWrap(resp, reqURL.origin);
+            return htmlWrap(resp, reqURL);
 
         } else if (contentType.includes("javascript")){
-            return wrapJS(resp, reqURL.origin);
+            return wrapJS(resp, reqURL);
 
         }
     }
