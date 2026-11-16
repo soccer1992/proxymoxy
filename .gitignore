@@ -1,0 +1,19 @@
+# IntelliJ / WebStorm
+.idea/
+*.iml
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
