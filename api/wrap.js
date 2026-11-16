@@ -1,9 +1,9 @@
-import {htmlWrap, wrapJS} from "/api/common/rewriters.js";
+import {htmlWrap, wrapJS} from "./common/rewriters.js";
 import {getUnwrapped} from "./common/shared.js";
 
 function shouldWrap(url){
     // expected to have the correct origin, since how else would this service worker be called?
-    return !(url.pathname.startsWith('/pub/') || url.pathname.startsWith('/api/'));
+    return !(url.pathname.startsWith('/pub/') || url.pathname.startsWith('/api/') || url.pathname==='/favicon.ico');
 
 }
 function dynamicWrap(contentType, resp, reqURL){
@@ -14,7 +14,7 @@ function dynamicWrap(contentType, resp, reqURL){
             return htmlWrap(resp, reqURL.origin);
 
         } else if (contentType.includes("javascript")){
-            return wrapJS(resp);
+            return wrapJS(resp, reqURL.origin);
 
         }
     }

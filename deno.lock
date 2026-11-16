@@ -1,0 +1,56 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@deno/installer-shell-setup@*": "0.3.4"
+  },
+  "jsr": {
+    "@deno/installer-shell-setup@0.3.4": {
+      "integrity": "48665d1a737d487cce6874bc97bba70a5aeffa7053aca3f60df93c6fab8963b4"
+    }
+  },
+  "remote": {
+    "https://cdn.jsdelivr.net/npm/@babel/generator/+esm": "fe3c26c9fac072b0fb81ec91f7ba96ba26ef53f9a4e16bcfe73e40817c2943fc",
+    "https://cdn.jsdelivr.net/npm/@babel/helper-string-parser@8.1.2/+esm": "3c88c6fcaaeacccfb989375075589df092a80073f2bb4435b73a412c06760cc3",
+    "https://cdn.jsdelivr.net/npm/@babel/helper-validator-identifier@8.0.6/+esm": "f510e74cd1909fc3466f44aff5580f2208bbaf3529d36e1a7a5f63dd31244c50",
+    "https://cdn.jsdelivr.net/npm/@babel/parser/+esm": "f2144e2037704f1149241ac702747f6680af4839e57a7a7d0ae88a7d91e370ed",
+    "https://cdn.jsdelivr.net/npm/@babel/types@8.1.2/+esm": "5bc6765cb2a44b3c909665e922a418a3c259c78d43f047ab3614c33a096630de",
+    "https://cdn.jsdelivr.net/npm/@jridgewell/gen-mapping@0.4.0-beta.0/+esm": "20213a4c88830e0d0296f45442f094b9dd2118228b4b0e1082c46a2f8bef8f38",
+    "https://cdn.jsdelivr.net/npm/@jridgewell/resolve-uri@3.1.2/+esm": "2bcd7c36c206f30343e32646dc1e2ef31fc20918b256c80b7e6a03f343c2d929",
+    "https://cdn.jsdelivr.net/npm/@jridgewell/sourcemap-codec@1.5.5/+esm": "4050edb876ed6155e01b147325a83d8bfd3a18afa788693356fdb88bbac91023",
+    "https://cdn.jsdelivr.net/npm/@jridgewell/sourcemap-codec@1.6.0-beta.0/+esm": "e4eea6cfaaaffd36bfd3d4f70d2f2af31a1a3997264f166f7273d5c4448b7dbb",
+    "https://cdn.jsdelivr.net/npm/@jridgewell/trace-mapping@0.3.31/+esm": "595e867de77804d8ff9b80eb95643cbcddd4b91d261f44d3466dba9b8b2ece42",
+    "https://cdn.jsdelivr.net/npm/boolbase@1.0.0/+esm": "bb5269c56130cef22cdd929e9c52f5502d8d20ff0e73bc0eb1bb5a921858fffc",
+    "https://cdn.jsdelivr.net/npm/cheerio-select@2.1.0/+esm": "be25da6540443f7045e60ea7c5c616eec99e99aca36fd6db8519ed264f9c4a0b",
+    "https://cdn.jsdelivr.net/npm/cheerio@1.2.0/+esm": "d334ef9476dc1852989860f09842c5e75f1622e2763df9c6931308efbc81f6e9",
+    "https://cdn.jsdelivr.net/npm/css-select@5.1.0/+esm": "340ec0cfb76dd525c595601ecb976aeef76ee5e51786be0ce3c9962717faac7c",
+    "https://cdn.jsdelivr.net/npm/css-what@6.1.0/+esm": "ad4d418d498e63614d18a3a5401cc1af2e63fbef3960880d44ffb02ddafd33ab",
+    "https://cdn.jsdelivr.net/npm/dom-serializer@2.0.0/+esm": "cd35c51cc765d43d1899b7b0c879bcddb0dab370aec92109710065012c82da9f",
+    "https://cdn.jsdelivr.net/npm/domelementtype@2.3.0/+esm": "1e217c2118100faeea60e582f730c9b24bd8a9a39137901bc3c0e85b8dbc4316",
+    "https://cdn.jsdelivr.net/npm/domhandler@5.0.2/+esm": "d67a51042ae0868a114c95a3650daff0c8fe74a0110eda133ebb12b451bdeea2",
+    "https://cdn.jsdelivr.net/npm/domhandler@5.0.3/+esm": "204885a73985b91fa13bb4c391e404c99945153b0dba768346446cecb9b50430",
+    "https://cdn.jsdelivr.net/npm/domutils@3.0.1/+esm": "77d183000831723e3d33de7bdc550096e9e3a25fe8dc66e19bff421728c7a8b4",
+    "https://cdn.jsdelivr.net/npm/domutils@3.2.2/+esm": "a27740fa8279e1e4d492f073bbf7e231f71a231a01a7466cabe7ee070e8de07e",
+    "https://cdn.jsdelivr.net/npm/entities@4.2.0/+esm": "0118926497a5da037881120f6c00ba6cfc52bbd5eba7e89bef3d69966e7601e3",
+    "https://cdn.jsdelivr.net/npm/entities@4.4.0/lib/decode.js/+esm": "efc8b84b6d98febdb9bd1f65f614934bde186ffaca30a92e8c5896276f1e9921",
+    "https://cdn.jsdelivr.net/npm/entities@4.4.0/lib/escape.js/+esm": "832b5cc2dc45886553d8f7e045bc5c3375ccfb6807a8b7fc8988ae3a9e96f162",
+    "https://cdn.jsdelivr.net/npm/entities@6.0.0/decode/+esm": "c752e833da0f11fa5aa4b987a90f4bcefdecd788e680383450990b4911c7cbf6",
+    "https://cdn.jsdelivr.net/npm/entities@6.0.0/escape/+esm": "d10363b24be132715148386bcfb332a25902a77c09da39a019573f6bac3c8e0f",
+    "https://cdn.jsdelivr.net/npm/entities@7.0.1/decode/+esm": "93473d244529c662a84bfd1ae2af2e3dd922e8d33136b17ce2ee297e3a2d7634",
+    "https://cdn.jsdelivr.net/npm/htmlparser2@10.1.0/+esm": "b9c170e38b3a4397b25759d647629db4124ee97d0ae1ef864bbae274a8312160",
+    "https://cdn.jsdelivr.net/npm/jsesc@3.1.0/+esm": "a68cc5597fed2e58e519e9bd02647cb8e10a7d88240ffc129c0032f47095f01e",
+    "https://cdn.jsdelivr.net/npm/nth-check@2.0.1/+esm": "eb4c29e70e52b5fc68e1982bb7b98ce7f9adfd44885adac1b79edae8ce4c330e",
+    "https://cdn.jsdelivr.net/npm/parse5-htmlparser2-tree-adapter@7.1.0/+esm": "651a002b01068a5ba82c4c74278b4d788b40c8fed591b324a5bc66fa2cbb388b",
+    "https://cdn.jsdelivr.net/npm/parse5@7.1.2/+esm": "0211da3b4fdf5b852ec4272a6c54cecdb9df7544173f1d26e04a883607f80f49",
+    "https://cdn.jsdelivr.net/npm/parse5@7.3.0/+esm": "b58a78809ef25609c44fc63a78e083bfd96d747e3267a8254f56b96c603089b5"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@babel/generator@^8.1.2",
+        "npm:@babel/parser@^8.1.2",
+        "npm:cheerio@^1.2.0",
+        "npm:express@^5.3.0"
+      ]
+    }
+  }
+}

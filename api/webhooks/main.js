@@ -1,10 +1,9 @@
-import {proxyWrapUrl, getUnwrapped, __VARMAINNAME__, supportedElements, __PROXY_URL__} from '/api/common/shared.js';
-let wrapJS = null;
-import("/api/common/rewriters.js").then(m => { wrapJS = m.wrapJS; }); // not awaited
+import {proxyWrapUrl, getUnwrapped, __VARMAINNAME__, supportedElements, __PROXY_URL__} from '../common/shared.js';
+import {wrapJS} from '../common/rewriters.js';
 
 
 function run() {
-    //document.querySelectorAll(`script[${__VARMAINNAME__}-injected]`).forEach(a => a.remove());
+    document.querySelectorAll(`script[${__VARMAINNAME__}-injected]`).forEach(a => a.remove());
 
     function wrap(eleName, eleNode) {
         let attrType = supportedElements[eleName];
@@ -49,7 +48,7 @@ function run() {
                         if (__node__.nodeType === Node.ELEMENT_NODE) {
                             if (__node__.nodeName.toLowerCase() === "script"){
                                 if (__node__.getAttribute('src') == null){
-                                    if (wrapJS) __node__.textContent = wrapJS(__node__.textContent, getUnwrapped(location.href));
+                                    __node__.textContent = wrapJS(__node__.textContent, getUnwrapped(location.href));
                                     continue;
                                 }
                             }

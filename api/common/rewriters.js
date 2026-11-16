@@ -1,34 +1,8 @@
 import * as __CHEERIO__ from 'https://cdn.jsdelivr.net/npm/cheerio@1.2.0/+esm';
 import { parse } from 'https://cdn.jsdelivr.net/npm/@babel/parser/+esm';
 import { generate } from 'https://cdn.jsdelivr.net/npm/@babel/generator/+esm';
-import {__VARMAINNAME__, __PROXY_URL__, proxyWrapUrl, supportedElements} from "/api/common/shared.js";
+import {__VARMAINNAME__, __PROXY_URL__, proxyWrapUrl, supportedElements} from "./shared.js";
 
-
-
-let WEBHOOK_MAIN = `
-    let locationVar = \`$${__VARMAINNAME__}$location\`;
-    let propertyVar = \`$${__VARMAINNAME__}$prop\`;
-    if (!Object.hasOwn(window, propertyVar)) {
-        Object.defineProperty(window, propertyVar, {
-            value: function(arg) {
-                switch (arg) {
-                    case "location":
-                        return locationVar;
-                    default:
-                        return arg;
-                }
-            },
-            writable: false,
-            enumerable: true,
-            configurable: false
-        });
-    }
-import { run as lrun } from '${__PROXY_URL__}api/webhooks/location.js';
-lrun(locationVar, propertyVar)
-import { run } from '${__PROXY_URL__}api/webhooks/main.js'
-
-run()
-`
 export function htmlWrap(html, fromOrigin){
     const $ = __CHEERIO__.load(html);
 
@@ -50,12 +24,11 @@ export function htmlWrap(html, fromOrigin){
         if (href)$(el).attr(attrName, proxyWrapUrl(href, fromOrigin));
 
     });
-    $('head').prepend($(`<script src="data:text/javascript;base64,${btoa(WEBHOOK_MAIN)}" ${__VARMAINNAME__}-injected="true" type="module" async></script>`));
+    $('head').prepend($(`<script src="${__PROXY_URL__}api/dist/webhook.bundle.js" ${__VARMAINNAME__}-injected="true"></script>`));
     return $.html();
 }
 function walkAST(__node__, visitor, parent = null) {
     if (!__node__ || typeof __node__ !== 'object') return;
-
     if (visitor[__node__.type]) {
         visitor[__node__.type](__node__, parent);
     }
@@ -73,7 +46,7 @@ function walkAST(__node__, visitor, parent = null) {
         }
     }
 }
-export function wrapJS(js) {
+export function wrapJS(js, fromOrigin) {
     const ast = parse(js, {
         sourceType: "unambiguous",
         allowAwaitOutsideFunction: true
@@ -112,7 +85,12 @@ export function wrapJS(js) {
 
     walkAST(ast, {
         MemberExpression: rewriteMember,
-        OptionalMemberExpression: rewriteMember
+        OptionalMemberExpression: rewriteMember,
+        ImportDeclaration: (__node__) => {
+            try{
+                __node__.source.value = proxyWrapUrl(__node__.source.value, fromOrigin)
+            }catch(e){}
+        }
     });
 
     return generate(ast).code;

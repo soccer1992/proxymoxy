@@ -1,4 +1,4 @@
-import {proxyWrapUrl, getUnwrapped} from '/api/common/shared.js';
+import {proxyWrapUrl, getUnwrapped} from '../common/shared.js';
 
 function run(locationVar, propertyVar){
 
@@ -111,7 +111,21 @@ function run(locationVar, propertyVar){
         configurable: false
 
     });
-
+    if (!Object.hasOwn(window, propertyVar)) {
+        Object.defineProperty(window, propertyVar, {
+            value: function(arg) {
+                switch (arg) {
+                    case "location":
+                        return locationVar;
+                    default:
+                        return arg;
+                }
+            },
+            writable: false,
+            enumerable: true,
+            configurable: false
+        });
+    }
     let originalFetch = originalWindow.fetch;
     let originalXHROpen = XMLHttpRequest.prototype.open;
 

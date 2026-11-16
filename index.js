@@ -92,22 +92,30 @@ app.get('/*targetUrl', async (req, res) => {
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
     if (targetUrl.startsWith('pub') || targetUrl.startsWith('api') || targetUrl === 'favicon.ico'){
-        if (targetUrl === 'api/sw.js'){
+        if (targetUrl === 'api/sw.js' || targetUrl == 'api/dist/sw.js'){
             res.setHeader("Service-Worker-Allowed","/")
         }
         const absolutePath = path.resolve(targetUrl);
-
+        if (path.extname(absolutePath)==='.ico'){
+            res.sendFile(absolutePath);
+            return;
+        }
         fs.readFile(absolutePath, 'utf8', (err, data) => {
             if (err) {
                 return res.status(500).end();
+            }
+            res.setHeader('Cache-Control', 'private, no-store')
+            res.type(path.extname(absolutePath));
+            if (path.extname(absolutePath)==='.ico'){
+            res.send(data);
+            return
             }
             let modifiedHtml = data;
             for (const [key, value] of obfuscation_var_mappings[rawIp]){
                 modifiedHtml = modifiedHtml.replaceAll(`${key}`, value);
             }
-            if (path.extname(absolutePath)==='.js' && USE_OBFUSCATION) modifiedHtml = stripJs(modifiedHtml);
-            res.setHeader('Cache-Control', 'private, no-store')
-            res.type(path.extname(absolutePath));
+            //if (path.extname(absolutePath)==='.js' && USE_OBFUSCATION) modifiedHtml = stripJs(modifiedHtml);
+
             res.send(modifiedHtml);
         });// {__MAINNAME__}
         return;
