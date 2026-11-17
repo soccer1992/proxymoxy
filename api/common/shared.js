@@ -1,4 +1,6 @@
 ///import { dynamicWrap } from '/api/wrap.js';
+import {dynamicWrap} from "../wrap.js";
+
 export let supportedElements = {
     "a": "href",
     "area": "href",
@@ -18,22 +20,22 @@ export let supportedElements = {
 }
 
 export function proxyWrapUrl(url, fromOrigin){
-    //if (url.startsWith("data:")){
-    //    let urlData = url.substring(5);
-    //    let readMime = false;
-    //    let mimeType = 'text/plain;charset=US-ASCII';
-    //    if (urlData[0]!==';' && urlData[0]!==','){
-    //        readMime = true;
-    //        // mime type
-    //        mimeType = urlData.split(';base64')[0].split(',')[0];
-    //    }
-    //    let b64encoded = urlData.includes(';base64');
-    //    let restOfData=urlData.substring(urlData.indexOf(",")+1);
-    //    if (b64encoded) restOfData = atob(restOfData);
-    //    let dynamicWrapped = dynamicWrap(mimeType, restOfData, fromOrigin);
-    //    if (dynamicWrapped == null) return url;
-    //    return 'data:' + (readMime?mimeType:'') + (b64encoded?';base64':'') + ',' + (b64encoded?btoa(dynamicWrapped):encodeURIComponent(dynamicWrapped));
-    //}
+    if (url.startsWith("data:")){
+        let urlData = url.substring(5);
+        let readMime = false;
+        let mimeType = 'text/plain;charset=US-ASCII';
+        if (urlData[0]!==';' && urlData[0]!==','){
+            readMime = true;
+            // mime type
+            mimeType = urlData.split(';base64')[0].split(',')[0];
+        }
+        let b64encoded = urlData.includes(';base64');
+        let restOfData=urlData.substring(urlData.indexOf(",")+1);
+        if (b64encoded) restOfData = atob(restOfData);
+        let dynamicWrapped = dynamicWrap(mimeType, restOfData, fromOrigin);
+        if (dynamicWrapped == null) return url;
+        return 'data:' + (readMime?mimeType:'') + (b64encoded?';base64':'') + ',' + (b64encoded?btoa(dynamicWrapped):encodeURIComponent(dynamicWrapped));
+    }
     if (new URL(__PROXY_URL__).origin===new URL(url,fromOrigin).origin)return url
     return __PROXY_URL__ + encodeURIComponent(new URL(url, fromOrigin).href);
     //if (url.startsWith('/')) {

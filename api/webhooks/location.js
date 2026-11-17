@@ -107,7 +107,7 @@ function run(locationVar, propertyVar){
                 return Reflect.set(this, 'location', newValue);
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: false
 
     });
@@ -131,7 +131,6 @@ function run(locationVar, propertyVar){
 
     originalWindow.fetch = new Proxy(originalWindow.fetch, {
         async apply(target, thisArg, args){
-            console.log(args[0])
             args[0] = proxyWrapUrl(args[0], locationProxy.href);
             return Reflect.apply(target, thisArg, args);
         }
@@ -139,8 +138,6 @@ function run(locationVar, propertyVar){
     originalWindow.XMLHttpRequest.prototype.open = new Proxy(originalWindow.XMLHttpRequest.prototype.open, {
         apply(target, thisArg, args){
             args[1] = proxyWrapUrl(args[1], locationProxy.href);
-            console.log(args[1])
-
             return Reflect.apply(target, thisArg, args);
         }
     })

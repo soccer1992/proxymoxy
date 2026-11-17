@@ -92,11 +92,20 @@ export function wrapJS(js, fromOrigin) {
             }catch(e){}
         },
         Identifier: (__node__) => {
-            switch (__node__.name){
-                case "location":
-                    __node__.name = `$${__VARMAINNAME__}$${__node__.name}`
-                    break;
-            }
+            let __parent__ = __node__.parent;
+            if (__node__.name !== "location") return;
+
+            if (
+                __parent__?.type === "ObjectMethod" &&
+                (__parent__.kind === "get" || __parent__.kind === "set")
+            ) return;
+
+            if (
+                __parent__?.type === "MethodDefinition" &&
+                (__parent__.kind === "get" || __parent__.kind === "set")
+            ) return;
+
+            __node__.name = `$${__VARMAINNAME__}$${__node__.name}`;
         }
     });
 

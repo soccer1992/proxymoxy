@@ -4,7 +4,7 @@ import * as fs from "node:fs";
 const app = express();
 app.set('trust proxy', true)
 const PORT = process.env.PORT || 3000;
-const USE_OBFUSCATION = true;
+const USE_OBFUSCATION = 0;
 const obfuscation_var_mappings = {};
 const renameVars = [
     "WEBHOOK_MAIN",
@@ -40,10 +40,7 @@ function randomName(length){
     }
     return z;
 }
-const stripJs = (s) => s.replace(
-    /("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|`(?:\\[\s\S]|[^`\\])*`)|\/\*[\s\S]*?\*\/|\/\/[^\n]*/g,
-    (m, str) => str ?? ''
-);
+
 // The Core Proxy Route
 app.get('/', (req, res) => {
     res.setHeader("Location","/pub/index.html");
@@ -52,6 +49,7 @@ app.get('/', (req, res) => {
 })
 
 app.all('/*targetUrl', async (req, res) => {
+    console.log(req.originalUrl)
     const rawIp = req.ip || '';
     if (rawIp === '') {
         res.status(403).end();
@@ -90,7 +88,7 @@ app.all('/*targetUrl', async (req, res) => {
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
     if (targetUrl.startsWith('pub') || targetUrl.startsWith('api') || targetUrl === 'favicon.ico'){
-        if (targetUrl === 'api/sw.js' || targetUrl == 'api/dist/sw.js'){
+        if (targetUrl === 'api/sw.js' || targetUrl === 'api/dist/sw.js'){
             res.setHeader("Service-Worker-Allowed","/")
         }
         const absolutePath = path.resolve(targetUrl);

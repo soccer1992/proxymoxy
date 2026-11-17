@@ -1,6 +1,18 @@
-import { getUnwrapped } from "../common/shared.js";
+import {__VARMAINNAME__, getUnwrapped} from "../common/shared.js";
 import { wrapJS } from "../common/rewriters.js";
 export function run(){
+  Object.defineProperty(Object.prototype, `$${__VARMAINNAME__}$rewrite`, {
+    value:(a,b)=>wrapJS(a,b===undefined?getUnwrapped(location.href):b),
+    enumerable:!1,
+    configurable:!0,
+    writable:!1
+  });
+  //window.eval = new Proxy(window.eval, {
+  //  apply(target,thisArg, args) {
+  //    args[0] = wrapJS(args[0].toString(), getUnwrapped(location.href));
+  //    return Reflect.apply(target, thisArg, args);
+  //  }
+  //})
     // new Function
     const FunctionProxy = new Proxy(window.Function, {
       construct(target, args, newTarget) {
