@@ -1,11 +1,15 @@
 import path from 'node:path';
 import express from 'express';
 import * as fs from "node:fs";
+import { readdir } from "node:fs/promises";
+
 const app = express();
 app.set('trust proxy', true)
 const PORT = process.env.PORT || 3000;
 const USE_OBFUSCATION = 0;
 const obfuscation_var_mappings = {};
+const obfuscation_js_remap = {};
+
 const renameVars = [
     "WEBHOOK_MAIN",
     "supportedElements",
@@ -30,6 +34,11 @@ const renameVars = [
     "visitor",
     "__node__"
 ]
+async function findJsFiles(dir = './') {
+    return (await readdir(dir, { recursive: true })).filter(file =>
+        path.extname(file) === '.js' && !file.includes('node_modules')
+    );
+}
 function randomName(length){
     let z = '';
     let randomChars='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -58,8 +67,10 @@ app.all('/*targetUrl', async (req, res) => {
     let newAdded = false;
     if (!Object.hasOwn(obfuscation_var_mappings, rawIp)) {
         obfuscation_var_mappings[rawIp] = new Map();
+        obfuscation_js_remap[rawIp] = new Map();
         newAdded = true;
     }
+
     if (USE_OBFUSCATION && newAdded) {
         obfuscation_var_mappings[rawIp].set("__MAINNAME__", randomName(10))
         obfuscation_var_mappings[rawIp].set("__ISOBFUSCATED__", "Obfuscated")
@@ -76,6 +87,10 @@ app.all('/*targetUrl', async (req, res) => {
         obfuscation_var_mappings[rawIp].set("__PROXY_URL__", "PROXY_URL") //__PROXY_URL__
     }
     if (newAdded) {
+        (await findJsFiles("pub/")).forEach(file => {
+            obfuscation_js_remap[file] = u
+            path.basename(file)
+        })
         renameVars.forEach(z=>obfuscation_var_mappings[rawIp].set(z, USE_OBFUSCATION?randomName(10):z))
     }
     let targetUrl = req.originalUrl.slice(1);
