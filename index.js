@@ -2,7 +2,7 @@ import path from 'node:path';
 import express from 'express';
 import * as fs from "node:fs";
 import { readdir } from "node:fs/promises";
-
+import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator'
 const app = express();
 app.set('trust proxy', true)
 const PORT = process.env.PORT || 3000;
@@ -56,6 +56,12 @@ app.get('/', (req, res) => {
     res.status(301);
     return res.send("<a href='/pub/index.html'>Here</a>")
 })
+function isDuplicate(ip, value){
+    const innerMap = obfuscation_js_remap[ip];
+    return innerMap ? Array.from(innerMap.values()).includes(value) : false;
+}
+function reverseGet(map, value){for(let [a,b]of map)if(b===value)return a
+    return null;}
 
 app.all('/*targetUrl', async (req, res) => {
     console.log(req.originalUrl)
@@ -88,8 +94,28 @@ app.all('/*targetUrl', async (req, res) => {
     }
     if (newAdded) {
         (await findJsFiles("pub/")).forEach(file => {
-            obfuscation_js_remap[file] = USE_OBFUSCATION?'a':file;
-            path.basename(file)
+                        if (!path.basename(file).endsWith('.js')) return;
+
+            if (!USE_OBFUSCATION){
+                obfuscation_js_remap[rawIp][file]=file;
+                return;
+            }
+            let genName = uniqueNamesGenerator({
+                dictionaries: [adjectives, animals],
+                separator: '',
+                style: 'capital'
+            });
+            let name = path.join(path.dirname(file), genName + path.extname(file));
+
+            while (isDuplicate(rawIp, name)){ 
+                genName = uniqueNamesGenerator({
+                    dictionaries: [adjectives, animals],
+                    separator: '',
+                    style: 'capital'
+                });
+                name = path.join(path.dirname(file), genName + path.extname(file));
+            }
+            obfuscation_js_remap[rawIp].set(file, name);
         })
         renameVars.forEach(z=>obfuscation_var_mappings[rawIp].set(z, USE_OBFUSCATION?randomName(10):z))
     }
@@ -105,6 +131,13 @@ app.all('/*targetUrl', async (req, res) => {
     if (targetUrl.startsWith('pub') || targetUrl.startsWith('api') || targetUrl === 'favicon.ico'){
         if (targetUrl === 'api/sw.js' || targetUrl === 'api/dist/sw.js'){
             res.setHeader("Service-Worker-Allowed","/")
+        }
+        if (targetUrl.startsWith("pub")){
+            if (USE_OBFUSCATION){
+                if (obfuscation_js_remap[rawIp].get(targetUrl.substring(4))) return res.status(500); // this works
+            }
+            // do rerouting
+            targetUrl = 'pub/' + (reverseGet(obfuscation_js_remap[rawIp], targetUrl.substring(4)) ?? targetUrl.substring(4))
         }
         const absolutePath = path.resolve(targetUrl);
         if (path.extname(absolutePath)==='.ico'){
@@ -122,7 +155,11 @@ app.all('/*targetUrl', async (req, res) => {
             return
             }
             let modifiedHtml = data;
-            for (const [key, value] of obfuscation_var_mappings[rawIp]){
+            const merged = new Map([
+    ...obfuscation_var_mappings[rawIp],
+    ...(targetUrl.startsWith('pub')?obfuscation_js_remap[rawIp]:new Map())
+]);
+            for (const [key, value] of merged){
                 modifiedHtml = modifiedHtml.replaceAll(`${key}`, value);
             }
             //if (path.extname(absolutePath)==='.js' && USE_OBFUSCATION) modifiedHtml = stripJs(modifiedHtml);
@@ -178,3 +215,4 @@ app.all('/*targetUrl', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Proxymoxy running live at http://localhost:${PORT}`);
 });
+//window[btoa('zö¥')](window[btoa('jÚ')]([...'=kSMoQnclxWY'].reverse()[btoa('§')]('')))  
