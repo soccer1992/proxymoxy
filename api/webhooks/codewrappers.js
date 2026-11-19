@@ -1,5 +1,6 @@
-import {__VARMAINNAME__, getUnwrapped} from "../common/shared.js";
+import { getUnwrapped} from "../common/shared.js";
 import { wrapJS } from "../common/rewriters.js";
+import {__VARMAINNAME__} from "../common/constants.js";
 export function run(){
   Object.defineProperty(Object.prototype, `$${__VARMAINNAME__}$rewrite`, {
     value:(a,b)=>wrapJS(a,b===undefined?getUnwrapped(location.href):b),

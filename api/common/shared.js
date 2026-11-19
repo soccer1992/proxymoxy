@@ -1,23 +1,7 @@
 ///import { dynamicWrap } from '/api/wrap.js';
 import {dynamicWrap} from "../wrap.js";
+import {__PROXY_URL__} from "./constants.js";
 
-export let supportedElements = {
-    "a": "href",
-    "area": "href",
-    "base": "href",
-    "link": "href",
-    "script": "src",
-    "img": "src",
-    "iframe": "src",
-    "video": "src",
-    "audio": "src",
-    "source": "src",
-    "track": "src",
-    "embed": "src",
-    "input": "src",
-    "meta": "/",
-    "form": "action"
-}
 
 export function proxyWrapUrl(url, fromOrigin){
     if (url.startsWith("data:")){
@@ -54,5 +38,3 @@ export function getUnwrapped(url){
 }
 
 
-export let __PROXY_URL__ = self.location.origin + "/"
-export let __VARMAINNAME__ = '__MAINNAME__';

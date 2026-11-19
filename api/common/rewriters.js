@@ -1,7 +1,8 @@
 import * as __CHEERIO__ from 'https://cdn.jsdelivr.net/npm/cheerio@1.2.0/+esm';
 import { parse } from 'https://cdn.jsdelivr.net/npm/@babel/parser/+esm';
 import { generate } from 'https://cdn.jsdelivr.net/npm/@babel/generator/+esm';
-import {__VARMAINNAME__, __PROXY_URL__, proxyWrapUrl, supportedElements} from "./shared.js";
+import {proxyWrapUrl} from "./shared.js";
+import {__PROXY_URL__, __VARMAINNAME__, supportedElements} from "./constants.js";
 
 export function htmlWrap(html, fromOrigin){
     const $ = __CHEERIO__.load(html);
@@ -47,10 +48,17 @@ function walkAST(__node__, visitor, parent = null) {
     }
 }
 export function wrapJS(js, fromOrigin) {
-    const ast = parse(js, {
-        sourceType: "unambiguous",
-        allowAwaitOutsideFunction: true
-    });
+    let ast;
+    console.log("SOURCE START:", JSON.stringify(js.slice(0, 100)));
+    console.log("SOURCE LENGTH:", js.length);
+
+     
+        ast = parse(js, {
+            sourceType: "unambiguous",
+            allowAwaitOutsideFunction: true,
+            allowReturnOutsideFunction: true
+        });
+
 
     const wrapFnName = `$${__VARMAINNAME__}$prop`;
 

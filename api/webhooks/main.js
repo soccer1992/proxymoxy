@@ -1,5 +1,6 @@
-import {proxyWrapUrl, getUnwrapped, __VARMAINNAME__, supportedElements, __PROXY_URL__} from '../common/shared.js';
+import {proxyWrapUrl, getUnwrapped} from '../common/shared.js';
 import {wrapJS} from '../common/rewriters.js';
+import {__PROXY_URL__, __VARMAINNAME__, supportedElements} from "../common/constants.js";
 
 
 function run() {

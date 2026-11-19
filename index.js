@@ -6,7 +6,7 @@ import { readdir } from "node:fs/promises";
 const app = express();
 app.set('trust proxy', true)
 const PORT = process.env.PORT || 3000;
-const USE_OBFUSCATION = 0;
+const USE_OBFUSCATION = 1;
 const obfuscation_var_mappings = {};
 const obfuscation_js_remap = {};
 
@@ -88,7 +88,7 @@ app.all('/*targetUrl', async (req, res) => {
     }
     if (newAdded) {
         (await findJsFiles("pub/")).forEach(file => {
-            obfuscation_js_remap[file] = u
+            obfuscation_js_remap[file] = USE_OBFUSCATION?'a':file;
             path.basename(file)
         })
         renameVars.forEach(z=>obfuscation_var_mappings[rawIp].set(z, USE_OBFUSCATION?randomName(10):z))
