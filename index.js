@@ -168,50 +168,10 @@ app.all('/*targetUrl', async (req, res) => {
         return;
     }
     return res.status(200).send("yup, proxies working, if you've gotten here during normal browsing, report this to the developers");
-    try {
-        //console.log(`[Proxymoxy] Fetching: ${targetUrl}`);
-
-        // 1. Fetch from the target server
-        let formatUrl = new URL(decodeURIComponent(targetUrl));
-        let headers = req.headers;
-        headers["host"] = formatUrl.host;
-        const isGetOrHead = ['GET', 'HEAD'].includes(req.method.toUpperCase());
-        const response = await fetch(formatUrl.href, {
-            headers: req.headers,
-            redirect: 'manual',
-            body: isGetOrHead ? undefined : req,
-            ...(isGetOrHead ? {} : { duplex: 'half' }),
-            method: req.method
-        });
-        res.status(response.status);
-        response.headers.forEach((value, name) => {
-            // Skip restricted headers like content-encoding if you alter the body
-            if (name !== 'content-encoding' && name !== 'content-security-policy' && name !== "x-frame-options") {
-                res.setHeader(name, value);
-            }
-        });
-
-        const targetOrigin = formatUrl.origin;
-
-        if (response.status >= 300 && response.status < 400) {
-            var locHeader = response.headers.get('location');
-            if (locHeader && !locHeader.startsWith('/')) {
-                res.setHeader("location", `/${encodeURIComponent(locHeader)}`)
-            } else if (locHeader){
-                res.setHeader("location", `/${encodeURIComponent(targetOrigin + locHeader)}`);
-
-            }
-        }
-        const buffer = await response.arrayBuffer();
-        return res.send(Buffer.from(buffer));
-        // 2. Mirror original headers back to the browser
-
-    } finally {
-
-    }
 });
 
 app.listen(PORT, () => {
     console.log(`Proxymoxy running live at http://localhost:${PORT}`);
 });
+// ignore this i was tryina do shenanigans with btoa to obfuscate eval
 //window[btoa('zö¥')](window[btoa('jÚ')]([...'=kSMoQnclxWY'].reverse()[btoa('§')]('')))  
