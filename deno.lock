@@ -48,6 +48,7 @@
       "dependencies": [
         "npm:@babel/generator@^8.1.2",
         "npm:@babel/parser@^8.1.2",
+        "npm:@mercuryworkshop/epoxy-transport@^3.0.2",
         "npm:cheerio@^1.2.0",
         "npm:express@^5.3.0",
         "npm:unique-names-generator@^4.7.1"

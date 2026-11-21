@@ -6,7 +6,7 @@ import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generato
 const app = express();
 app.set('trust proxy', true)
 const PORT = process.env.PORT || 3000;
-const USE_OBFUSCATION = 1;
+const USE_OBFUSCATION = 0;
 const obfuscation_var_mappings = {};
 const obfuscation_js_remap = {};
 
@@ -28,7 +28,6 @@ const renameVars = [
     "__request__",
     "reqURL",
     "response",
-    "resp",
     "fromOrigin",
     "attrName",
     "visitor",
@@ -168,7 +167,7 @@ app.all('/*targetUrl', async (req, res) => {
         });// {__MAINNAME__}
         return;
     }
-
+    return res.status(200).send("yup, proxies working, if you've gotten here during normal browsing, report this to the developers");
     try {
         //console.log(`[Proxymoxy] Fetching: ${targetUrl}`);
 

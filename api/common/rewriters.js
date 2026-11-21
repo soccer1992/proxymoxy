@@ -22,7 +22,10 @@ export function htmlWrap(html, fromOrigin){
         let attrName = supportedElements[el.name]
         if (!attrName)return;
         const href = $(el).attr(attrName);
-        if (href)$(el).attr(attrName, proxyWrapUrl(href, fromOrigin));
+        if (href){
+            $(el).attr(attrName, proxyWrapUrl(href, fromOrigin));
+            $(el).attr(`${__VARMAINNAME__}-orig-${attrName}`, href)
+        }
 
     });
     $('head').prepend($(`<script src="${__PROXY_URL__}api/dist/webhook.bundle.js" ${__VARMAINNAME__}-injected="true"></script>`));
@@ -49,16 +52,11 @@ function walkAST(__node__, visitor, parent = null) {
 }
 export function wrapJS(js, fromOrigin) {
     let ast;
-    console.log("SOURCE START:", JSON.stringify(js.slice(0, 100)));
-    console.log("SOURCE LENGTH:", js.length);
-
-     
-        ast = parse(js, {
-            sourceType: "unambiguous",
-            allowAwaitOutsideFunction: true,
-            allowReturnOutsideFunction: true
-        });
-
+    ast = parse(js, {
+        sourceType: "unambiguous",
+        allowAwaitOutsideFunction: true,
+        allowReturnOutsideFunction: true
+    });
 
     const wrapFnName = `$${__VARMAINNAME__}$prop`;
 

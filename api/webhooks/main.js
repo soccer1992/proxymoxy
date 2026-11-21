@@ -12,6 +12,7 @@ function run() {
         if (!eleNode.getAttribute(attrType)) return;
         let attrOut = new URL(eleNode.getAttribute(attrType),  getUnwrapped(location.href));
         if (attrOut.origin === new URL(__PROXY_URL__).origin) return
+        eleNode.setAttribute(__VARMAINNAME__ + '-orig-' + attrType, attrOut);
         eleNode.setAttribute(attrType, proxyWrapUrl(attrOut.toString(), getUnwrapped(location.href)));
     }
     document.querySelectorAll("*").forEach(a => wrap(a.tagName.toLowerCase(), a));
