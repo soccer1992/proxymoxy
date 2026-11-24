@@ -49,7 +49,8 @@ function run() {
                         // Check newly injected scripts, iframes, etc.
                         if (__node__.nodeType === Node.ELEMENT_NODE) {
                             if (__node__.nodeName.toLowerCase() === "script"){
-                                if (__node__.getAttribute('src') == null){
+                                let type = __node__.getAttribute('type')
+                                if (__node__.getAttribute('src') == null &&  ( type === 'module' || type === '' || type === 'application/javascript' || type === 'text/javascript') ){
                                     __node__.textContent = wrapJS(__node__.textContent, getUnwrapped(location.href));
                                     continue;
                                 }

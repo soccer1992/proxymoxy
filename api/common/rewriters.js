@@ -52,12 +52,16 @@ function walkAST(__node__, visitor, parent = null) {
 }
 export function wrapJS(js, fromOrigin) {
     let ast;
-    ast = parse(js, {
-        sourceType: "unambiguous",
-        allowAwaitOutsideFunction: true,
-        allowReturnOutsideFunction: true
-    });
-
+    try {
+        ast = parse(js, {
+            sourceType: "unambiguous",
+            allowAwaitOutsideFunction: true,
+            allowReturnOutsideFunction: true
+        });
+    } catch (e){
+        console.error(e);
+        return js;
+    }
     const wrapFnName = `$${__VARMAINNAME__}$prop`;
 
     const rewriteMember = (__node__) => {

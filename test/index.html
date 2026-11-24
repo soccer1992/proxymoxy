@@ -6,8 +6,109 @@
 </head>
 <body>
 <script>
+
+    const RLO = '\u202e';
+    const LRO = '\u202d';
+    const MAX_DEPTH = 125; // bidi allows 125 nested levels; past that renderers stop nesting
+
+    const isSpace = (ch) => /\s/.test(ch);
+    const randInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+
+    function sample(arr, k) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = randInt(0, i);
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a.slice(0, k);
+    }
+
+    function preimage(text) {
+        const chars = [];
+        const ctrls = [];
+        for (const ch of text) {            // iterates by code point, so emoji stay whole
+            if (ch === RLO || ch === LRO) ctrls.push([chars.length, ch]);
+            else chars.push(ch);
+        }
+        for (const [pos] of ctrls) {        // pre-apply the renderer's suffix reversals
+            const tail = chars.splice(pos).reverse();
+            for (const c of tail) chars.push(c);
+        }
+        return { chars, ctrls };
+    }
+
+    function getRemasked(text) {
+        const { chars, ctrls } = preimage(text);
+        let out = '';
+        let prev = 0;
+        for (const [pos, ch] of ctrls) {
+            out += chars.slice(prev, pos).join('') + ch;
+            prev = pos;
+        }
+        return out + chars.slice(prev).join('');
+    }
+
+    function scramble(text, insertions = 10) {
+        const src = Array.from(text);
+        const n = src.length;
+
+        // [start, end] of each space-separated word
+        const words = [];
+        for (let i = 0; i < n; ) {
+            if (isSpace(src[i])) { i++; continue; }
+            const start = i;
+            while (i < n && !isSpace(src[i])) i++;
+            words.push([start, i]);
+        }
+
+        let result = text;
+        let thingMap = new Map([[0, true]]);
+
+        for (let attempt = 0; attempt < 200; attempt++) {
+            const taken = new Set();
+
+            // controls only go BETWEEN visible chars (1..n-1), one per spot
+            const pick = (lo, hi) => {
+                let free = [];
+                for (let p = Math.max(lo, 1); p <= Math.min(hi, n - 1); p++) if (!taken.has(p)) free.push(p);
+                if (!free.length) for (let p = 1; p < n; p++) if (!taken.has(p)) free.push(p);
+                if (!free.length) return null;
+                const p = free[randInt(0, free.length - 1)];
+                taken.add(p);
+                return p;
+            };
+
+            let positions = words.map(([s, e]) => pick(s, e));                    // one per word
+            for (let i = 0; i < insertions; i++) positions.push(pick(1, n - 1));  // random overlay
+            positions = positions.filter((p) => p !== null);
+            if (positions.length > MAX_DEPTH) positions = sample(positions, MAX_DEPTH);
+            positions.sort((a, b) => a - b);
+
+            thingMap = new Map([[0, true]]);
+            let out = '';
+            let prev = 0;
+            positions.forEach((p, i) => {
+                const useRlo = i % 2 === 0;                                         // e, d, e, d, ...
+                out += src.slice(prev, p).join('') + (useRlo ? RLO : LRO);
+                thingMap.set(p + i, useRlo);                                        // real index of the control
+                prev = p;
+            });
+            out += src.slice(prev).join('');
+            result = out;
+
+            const { chars } = preimage(result);
+            if (!(chars.length && isSpace(chars[chars.length - 1]))) break;       // trailing space never reorders
+        }
+        return [result, thingMap];
+    }
+
+
+
     const blobUrl = URL.createObjectURL(
-        new Blob(["<p>text</p>"], { type: "text/html" })
+        new Blob(
+            [`<meta charset="utf-8"><p>${getRemasked(scramble("AI bomboclat")[0])}</p>`],
+            { type: "text/html;charset=utf-8" }
+        )
     );
     console.log(blobUrl);
     let meta = document.createElement('meta');

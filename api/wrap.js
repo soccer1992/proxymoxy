@@ -3,7 +3,7 @@ import {getUnwrapped, proxyWrapUrl} from "./common/shared.js";
 
 function shouldWrap(url){
     // expected to have the correct origin, since how else would this service worker be called?
-    return !(url.pathname.startsWith('/pub/') || url.pathname.startsWith('/api/') || url.pathname==='/favicon.ico');
+    return !(url.pathname.startsWith('/pub/') || url.pathname.startsWith('/api/') || url.pathname==='/favicon.ico' || url.pathname === '/');
 
 }
 function dynamicWrap(contentType, resp, reqURL){

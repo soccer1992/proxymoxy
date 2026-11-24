@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+    blobCount=parseInt(location.hash.slice(1))||0,c=parent.c??0,d=document;if (location.protocol!=='blob:')d.head.appendChild(Object.assign(d.createElement('meta'),{httpEquiv:'refresh',content:`0;${URL.createObjectURL(new Blob([d.documentElement.outerHTML],{type: "text/html;charset=utf-8"}))+`#${blobCount}`}`}));else if(top.blobCount===9){
+        // UR CODE GOES HERE
+        //unable to be minified
+        top.location.href = 'https://example.com';
+    }else if(c++===9)top.d.head.appendChild(Object.assign(d.createElement('meta'),{httpEquiv:'refresh',content:`0;${URL.createObjectURL(new Blob([d.documentElement.outerHTML],{type:"text/html;charset=utf-8"}))+'#'+(++top.blobCount)}`}));else d.body.appendChild(Object.assign(d.createElement('iframe'),{srcdoc:d.documentElement.innerHTML}));
+</script>
+</body>
+</html>
