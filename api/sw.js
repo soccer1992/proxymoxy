@@ -9,7 +9,7 @@ self.addEventListener('install', (event) => {
 });
 function createClient() {
     return new EpoxyClient({
-        wisp: "ws://127.0.0.1:6001",
+        wisp: "wss://holywisp.fracit.al/",
     });
 }
 
@@ -49,6 +49,11 @@ self.addEventListener('fetch', (event) => {
             let raw;
             while (connectFailed) {
                 try {
+                    console.log(                        unwrapped,
+                        event.request.method,
+                        ["GET", "HEAD"].includes(event.request.method) ? null : event.request.body,
+                        [...rewrittenHeaders],
+                        event.request.signal)
                     raw = await client.request(
                         unwrapped,
                         event.request.method,
@@ -63,8 +68,9 @@ self.addEventListener('fetch', (event) => {
                         initPromise = null;
                         connectFailed = true;
                         await ensureInit();
+                    } else {
+                        throw e;
                     }
-                    throw e;
                 }
             }
             return (__wrap__(raw, event.request))
