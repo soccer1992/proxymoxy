@@ -1,6 +1,6 @@
 import {proxyWrapUrl, getUnwrapped} from '../common/shared.js';
 
-function run(locationVar, propertyVar){
+function run(locationVar, propertyVar, evalVar){
 
 
     let originalWindow = window;
@@ -117,6 +117,8 @@ function run(locationVar, propertyVar){
                 switch (arg) {
                     case "location":
                         return locationVar;
+                    case "eval":
+                        return evalVar;
                     default:
                         return arg;
                 }

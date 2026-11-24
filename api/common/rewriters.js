@@ -94,6 +94,20 @@ export function wrapJS(js, fromOrigin) {
     };
 
     walkAST(ast, {
+        CallExpression(__node__) {
+            if (
+                __node__.callee.type === "Identifier" &&
+                __node__.callee.name === "eval" &&
+                !__node__.optional
+            ) {
+                // Rewrite eval arguments
+                __node__.arguments = __node__.arguments.map((arg) => ({
+                    type: "CallExpression",
+                    callee: { type: "Identifier", name: `$${__VARMAINNAME__}$rewrite` },
+                    arguments: [arg]
+                }));
+            }
+        },
         MemberExpression: rewriteMember,
         OptionalMemberExpression: rewriteMember,
         ImportDeclaration: (__node__) => {
@@ -101,10 +115,12 @@ export function wrapJS(js, fromOrigin) {
                 __node__.source.value = proxyWrapUrl(__node__.source.value, fromOrigin.href)
             }catch(e){}
         },
-        Identifier: (__node__) => {
-            let __parent__ = __node__.parent;
+        Identifier: (__node__, __parent__) => {
             if (__node__.name !== "location") return;
-
+            if (
+                __parent__?.type === "ObjectProperty" &&
+                __parent__?.key === __node__
+            ) return;
             if (
                 __parent__?.type === "ObjectMethod" &&
                 (__parent__.kind === "get" || __parent__.kind === "set")

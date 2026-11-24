@@ -6,7 +6,7 @@ import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generato
 const app = express();
 app.set('trust proxy', true)
 const PORT = process.env.PORT || 3000;
-const USE_OBFUSCATION = 0;
+const USE_OBFUSCATION = 1;
 const obfuscation_var_mappings = {};
 const obfuscation_js_remap = {};
 
