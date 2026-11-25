@@ -133,7 +133,7 @@ app.all('/*targetUrl', async (req, res) => {
         }
         if (targetUrl.startsWith("pub")){
             if (USE_OBFUSCATION){
-                if (obfuscation_js_remap[rawIp].get(targetUrl.substring(4))) return res.status(500); // this works
+                if (obfuscation_js_remap[rawIp].get(targetUrl.substring(4))) return res.status(404); // this works
             }
             // do rerouting
             targetUrl = 'pub/' + (reverseGet(obfuscation_js_remap[rawIp], targetUrl.substring(4)) ?? targetUrl.substring(4))
@@ -145,7 +145,7 @@ app.all('/*targetUrl', async (req, res) => {
         }
         fs.readFile(absolutePath, 'utf8', (err, data) => {
             if (err) {
-                return res.status(500).end();
+                return res.status(404).end();
             }
             res.setHeader('Cache-Control', 'private, no-store')
             res.type(path.extname(absolutePath));
